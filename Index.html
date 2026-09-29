@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор потолков</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #1d1d1f;
+            outline: none;
+            transition: all 0.2s ease;
+            -webkit-appearance: none;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            background-color: rgba(0, 113, 227, 0.05);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 113, 227, 0.1);
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #0071e3;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .result-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1d1d1f;
+            letter-spacing: -1px;
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 16px;
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2);
+        }
+
+        .btn-calc:hover {
+            background-color: #0077ed;
+        }
+
+        .btn-calc:active {
+            background-color: #0062c3;
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <div class="logo">Потолки.Расчет</div>
+    
+    <div class="input-group">
+        <label for="area">Площадь комнаты (м²)</label>
+        <input type="number" id="area" placeholder="0" min="1" oninput="calculatePrice()">
+    </div>
+    
+    <div class="input-group">
+        <label for="corners">Количество углов</label>
+        <input type="number" id="corners" placeholder="4" min="4" value="4" oninput="calculatePrice()">
+    </div>
+    
+    <div class="input-group">
+        <label for="material">Тип материала</label>
+        <select id="material" onchange="calculatePrice()">
+            <option value="500">Матовый (500 руб/м²)</option>
+            <option value="650">Глянцевый (650 руб/м²)</option>
+        </select>
+    </div>
+
+    <button class="btn-calc" onclick="calculatePrice()">Рассчитать стоимость</button>
+
+    <div class="result-box">
+        <div class="result-label">Итоговая стоимость</div>
+        <div class="result-price"><span id="total-price">0</span> ₽</div>
+    </div>
+</div>
+
+<script>
+    function calculatePrice() {
+        const area = parseFloat(document.getElementById('area').value) || 0;
+        const corners = parseInt(document.getElementById('corners').value) || 0;
+        const materialPricePerMeter = parseFloat(document.getElementById('material').value);
+        
+        if (area <= 0) {
+            document.getElementById('total-price').innerText = '0';
+            return;
+        }
+
+        // Логика расчета: (площадь * цена материала) + (каждый угол свыше 4 штук стоит 150 руб)
+        let basePrice = area * materialPricePerMeter;
+        let extraCorners = corners > 4 ? (corners - 4) * 150 : 0;
+        
+        let totalPrice = basePrice + extraCorners;
+        
+        // Красивое форматирование числа с пробелами
+        document.getElementById('total-price').innerText = totalPrice.toLocaleString('ru-RU');
+    }
+</script>
+
+</body>
+</html>
 
